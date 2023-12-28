@@ -3,11 +3,9 @@
 #include "arch.h"
 
 // constantes de los límites en los nombres y en el contenido de los archivos
-#define MAX_CONTENIDO 2000
-#define MAX_NOMBRE 20
 
 
-enum STATUS{SUCCESFULL ,NOT_EMPTY , ALREADY_EXIST , ALREADY_EMPTY , NOT_FOUND , UNREACHABLE};  // posibles errores que puede devolver cuando se intenten hacer operaciones no válidas
+
 
 
 // para este primer modelado se utilizará un archivo para almacenar todo el contenido de los archivos

@@ -4,11 +4,25 @@
 
 #define MAX_CONTENIDO 2000
 #define MAX_NOMBRE 20
-enum errores{IS_NOT_EMPTY , ALREADY_EXIST};  // errores que pueden devolver el llamado de las funciones 
+
+enum STATUS{SUCCESFULL ,NOT_EMPTY , ALREADY_EXIST , ALREADY_EMPTY , NOT_FOUND , UNREACHABLE};  // posibles errores que puede devolver cuando se intenten hacer operaciones no válidas
+
+// funciones para carpetas
 
 int mkdir(struct  Dir* carpeta , char nombre[MAX_NOMBRE]);
 
+int rmdir(struct Dir* carpeta , char nombre[MAX_NOMBRE]);
 
+int cd (struct Dir* carpeta , char nombre[MAX_NOMBRE]);
+
+int back(struct Dir* carpeta);
+
+
+// funciones para archivos
+
+int touch(struct Dir* carpeta , char nombre[MAX_NOMBRE]);
+
+int rmfile(struct Dir* carpeta , char nombre[MAX_NOMBRE]);
 
 
 
