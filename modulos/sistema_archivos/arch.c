@@ -1,5 +1,6 @@
 #include <string.h>
 #include <stdbool.h>
+#include <stdio.h>
 #include "arch.h"
 
 // constantes de los límites en los nombres y en el contenido de los archivos
@@ -128,14 +129,7 @@ int mkdir(struct  Dir* carpeta , char nombre[MAX_NOMBRE]){
     return estado;
 }
 
-bool isEmpty(struct Dir* carpeta){
-    if(carpeta->inf == NULL && carpeta->files == NULL){   // está vacía siempre que no tenga ni carpetas ni archivos dentro
-        return true;
-    }
-    else{
-        return false;
-    }
-}
+
 
 int rmdir(struct Dir* carpeta , char nombre[MAX_NOMBRE]){
     enum STATUS estado = SUCCESFULL;
@@ -159,7 +153,7 @@ int rmdir(struct Dir* carpeta , char nombre[MAX_NOMBRE]){
             estado = NOT_FOUND;
         }
         else{
-            if(isEmpty(iter)){// si la carpeta no tiene nada adentro se elimina de la lista de carpetas hijas
+            if(ls(iter) == ALREADY_EMPTY){// si la carpeta no tiene nada adentro se elimina de la lista de carpetas hijas
                 aux->izq = iter->izq; // se aisla al puntero correspondiente a la carpeta y luego se elimina
                 free(iter);
             }
@@ -211,9 +205,42 @@ int back(struct Dir* carpeta){
     return estado;
 }
 
+// función para consultar el contenido de una carpeta
+int ls(struct Dir* carpeta){
+    enum STATUS estado = SUCCESFULL;
+    struct Dir* auxDir = carpeta->inf;
+    struct Nodo* auxFile = carpeta->files;
+    if(auxDir == auxFile == NULL){
+        estado = ALREADY_EMPTY;  
+    }
+    if(auxDir){
+        estado ++; // pasa al estado NOT_FILES
+        printf("Directorios:\n");
+        while(auxDir){
+            printf("%s\n",auxDir->nombre);
+            auxDir = auxDir->izq;
+        }
+    }
+    if(auxFile){
+        if(estado > SUCCESFULL){ // si ya pasó por el bucle anterior y va a pasar por este, el estado vuelve a ser SUCCESFULL
+            estado = SUCCESFULL;
+        }
+        else{
+            estado += 2; // caso contrario, este es el primer bucle por el que pasa, por lo que el estado debe ser NOT_DIRS
+        }
+        printf("Archivos:\n");
+        while(auxFile){
+            printf("%s\n",auxFile->dato.nombre);
+            auxFile = auxFile->sig;
+        }
+    }
+
+    return estado;
+}
+
 //------------------------------------------------------------------FUNCIONES PARA MANIPULACIÓN DE ARCHIVOS-------------------------------------------------------------
 
-// enum STATUS{SUCCESFULL ,NOT_EMPTY , ALREADY_EXIST , ALREADY_EMPTY , NOT_FOUND , UNREACHABLE};
+
 
 // función para crear un archivo dentro del directorio actual
 int touch(struct Dir* carpeta , char nombre[MAX_NOMBRE]){
