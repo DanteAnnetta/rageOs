@@ -3,26 +3,11 @@
 #include <stdio.h>
 #include "arch.h"
 
-// constantes de los límites en los nombres y en el contenido de los archivos
 
-
-
-
-
-// para este primer modelado se utilizará un archivo para almacenar todo el contenido de los archivos
-
-struct File{
-    int permisos;  // para comodidad en la instanciación, estos se escribirán en binario "0b000000", trabajando de a pares leer- escribir correspondientes a grupo-usuario-todos
-    char nombre[MAX_NOMBRE];
-    char cont[MAX_CONTENIDO];
-};
 
 //-------------------------------------------------------------------INICIO FUNCIONES PARA LISTA DE ARCHIVOS------------------------------------------------------------
 
-struct Nodo {
-    struct File dato;
-    struct Nodo* sig;
-};
+
 
 int criterioArchivo(struct File archivo1 , struct File archivo2){
     return strcmp(archivo1.nombre , archivo2.nombre);
@@ -42,6 +27,19 @@ void insertar(struct File archivo , struct Nodo * Lista){
 }
 
 // esta función, en conjunto con la anterior se utilizarán para realizar movimientos dentro del sistema de archivos
+
+
+bool borrar(struct File archivo , struct Nodo* Lista){
+    struct Nodo* ext = extraer(archivo , &Lista);
+    if(ext){
+        free(ext);
+        return true;
+    }
+    else{
+        return false;
+    }
+}
+
 struct Nodo* extraer(struct File archivo, struct Nodo* Lista){
     struct Nodo* aux;
     struct Nodo **pp = & Lista;
@@ -60,16 +58,6 @@ struct Nodo* extraer(struct File archivo, struct Nodo* Lista){
     }
 }
 
-bool borrar(struct File archivo , struct Nodo* Lista){
-    struct Nodo* ext = extraer(archivo , &Lista);
-    if(ext){
-        free(ext);
-        return true;
-    }
-    else{
-        return false;
-    }
-}
 // Hasta esta función, todas las de manipulación de la lista de archivos necesitan que el parámetro de la lista se pase como valor del puntero y no como puntero
 
 struct Nodo* buscar(struct File archivo , struct Nodo* Lista){
@@ -90,14 +78,6 @@ struct Nodo* buscar(struct File archivo , struct Nodo* Lista){
 
 //----------------------------------------------------FUNCIONES PARA LA GESTIÓN DE LOS DIRECTORIOS-------------------------------------------------------
 
-struct Dir{
-    int permisos;
-    char nombre[MAX_NOMBRE];
-    struct Dir* sup;
-    struct Dir* izq;
-    struct Dir* inf;
-    struct Nodo* files;  // lista de archivos que contiene cada uno de los directorios
-};
 
 
 // al llamar a las funciones:  modificarValor(&x);
