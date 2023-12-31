@@ -5,12 +5,12 @@
 
 
 #define MAX_CONTENIDO 2000
-#define MAX_NOMBRE 20
+//#define MAX_NOMBRE 20
 
 // declaración de estructuras necesarias para el sistema
 struct File{
     int permisos;  // para comodidad en la instanciación, estos se escribirán en binario "0b000000", trabajando de a pares leer- escribir correspondientes a grupo-usuario-todos
-    char nombre[MAX_NOMBRE];
+    char* nombre;
     char cont[MAX_CONTENIDO];
 };
 
@@ -21,7 +21,7 @@ struct Nodo {
 
 struct Dir{
     int permisos;
-    char nombre[MAX_NOMBRE];
+    char* nombre;
     struct Dir* sup;
     struct Dir* izq;
     struct Dir* inf;
@@ -34,17 +34,15 @@ enum STATUS{NOT_EMPTY , ALREADY_EXIST , ALREADY_EMPTY , NOT_FOUND , UNREACHABLE 
 
 // funciones para carpetas
 
-int mkdir(struct  Dir* carpeta , char nombre[MAX_NOMBRE]);
+int mkdir(struct  Dir* carpeta , char* nombre);
 
-int rmdir(struct Dir* carpeta , char nombre[MAX_NOMBRE]);
+int rmdir(struct Dir* carpeta , char* nombre);
 
-int cd (struct Dir* carpeta , char nombre[MAX_NOMBRE]);
+int cd (struct Dir* carpeta , char* nombre);
 
 int back(struct Dir* carpeta);
 
 int ls(struct Dir* carpeta);
-
-// DESARROLLAR ESTAS FUNCIONALIDADES
 
 int chmod(struct Dir* carpeta, int permisos);
 
@@ -52,10 +50,18 @@ int pwd(struct Dir* carpeta);
 
 // funciones para archivos
 
-int touch(struct Dir* carpeta , char nombre[MAX_NOMBRE]);
+int touch(struct Dir* carpeta , char* nombre);
 
-int rmfile(struct Dir* carpeta , char nombre[MAX_NOMBRE]);
+int rmfile(struct Dir* carpeta , char* nombre);
+
+
+
+//---------------------------------------------------------------------TRABAJO PARA HACER---------------------------------------------------------------------
 
 // agregar funciones de persistencia únicamente (load y save)
+
+// DESARROLLAR CHMOD RECURSIVO PARA TODO EL CONTENIDO DE UNA CARPETA
+
+//int chmodR(struct Dir* carpeta , int permisos);
 
 #endif

@@ -1,6 +1,7 @@
 #include <string.h>
 #include <stdbool.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include "arch.h"
 
 
@@ -82,11 +83,11 @@ struct Nodo* buscar(struct File archivo , struct Nodo* Lista){
 
 // al llamar a las funciones:  modificarValor(&x);
 
-int mkdir(struct  Dir* carpeta , char nombre[MAX_NOMBRE]){
+int mkdir(struct  Dir* carpeta , char* nombre){
     enum STATUS estado = SUCCESFULL;  // a no ser que haya errores, el estado predeterminado es de éxito
     struct Dir* nuevo;
     nuevo->sup = carpeta;  // la carpeta de la que proviene
-    memcpy(nuevo->nombre, nombre, sizeof(char) * MAX_NOMBRE);
+    nuevo->nombre = nombre;
     nuevo->permisos = carpeta->permisos;  // a no ser que se modifiquen, las carpetas creadas mantendrán los mismos permisos que las heredadas
 
     if(carpeta->inf){  // si tiene otras carpetas dentro de esta, las recorre hasta llegar a la última y agrega la misma dentro del 
@@ -111,7 +112,7 @@ int mkdir(struct  Dir* carpeta , char nombre[MAX_NOMBRE]){
 
 
 
-int rmdir(struct Dir* carpeta , char nombre[MAX_NOMBRE]){
+int rmdir(struct Dir* carpeta , char* nombre){
     enum STATUS estado = SUCCESFULL;
 
     if(carpeta->inf == NULL){// si donde se quiere eliminar una carpeta ya de inicio no hay ninguna salta este error
@@ -123,7 +124,7 @@ int rmdir(struct Dir* carpeta , char nombre[MAX_NOMBRE]){
         struct Dir* aux;
         while(iter->izq){
             aux = iter;
-            if(strcmp(iter->nombre , nombre)== 0){  // cuando encuentra la carpeta deseada
+            if(strcmp(iter->nombre , nombre)== 0){  // cuando encuentra la carpeta deseada   // verificar si el cambio de char[] a char* interfiere con esto
                 flag = true;
                 break;
             }
@@ -148,7 +149,7 @@ int rmdir(struct Dir* carpeta , char nombre[MAX_NOMBRE]){
 
 
 
-int cd (struct Dir* carpeta , char nombre[MAX_NOMBRE]){
+int cd (struct Dir* carpeta , char* nombre){
     enum STATUS estado = SUCCESFULL;
     if(carpeta->inf == NULL){// si donde se quiere eliminar una carpeta ya de inicio no hay ninguna salta este error
         estado = ALREADY_EMPTY;
@@ -218,15 +219,55 @@ int ls(struct Dir* carpeta){
     return estado;
 }
 
+// en un principio, se podrá cambiar los permisos de las carpetas y de los archivos sin ningún tipo de restricción.
+// estas se agregarán cuando se desarrolle el concepto de usuarios
+
+int chmod(struct Dir* carpeta, int permisos){
+    enum STATUS estado = SUCCESFULL;
+    carpeta->permisos = permisos;
+    return estado;
+}
+
+
+
+// función auxiliar para pwd
+
+char* concat(char* s1 , char* s2){
+    size_t lng = strlen(s1) + strlen(s2);
+    char *resul = (char *)malloc(lng + 1);
+    // copia el contenido de la primera cadena 
+    strcpy(resul, s1);
+    // Concatenar la segunda cadena a la cadena resultante
+    strcat(resul, s2);
+
+    return resul;
+}
+
+// en esta función no es necesario pasar por referencia el valor del puntero
+int pwd(struct Dir* carpeta){
+    char* path;
+    char* aux;
+    while (carpeta->sup){
+        //printf("%s/" , carpeta->nombre);
+        aux = concat( carpeta->nombre ,"/");  // le agrega una barra al final de cada directorio para poder separar los nombres
+        path = concat(aux , path);  // concatena las carpetas en una única cadena
+    }
+    path = concat("/" , path);
+
+    printf("%s \n" , path);  // muestra el camino absoluto desde donde se encuentra actualmente
+    
+}
+
+
 //------------------------------------------------------------------FUNCIONES PARA MANIPULACIÓN DE ARCHIVOS-------------------------------------------------------------
 
 
 
 // función para crear un archivo dentro del directorio actual
-int touch(struct Dir* carpeta , char nombre[MAX_NOMBRE]){
+int touch(struct Dir* carpeta , char* nombre){
     enum STATUS estado = SUCCESFULL;
     struct File nuevo;
-    memcpy(nuevo.nombre, nombre, sizeof(char) * MAX_NOMBRE);
+    nuevo.nombre = nombre;
 
     if(buscar(nuevo , carpeta->files)!= NULL){ // Si encuentra un archivo con ese nombre dentro de la carpeta devuelve este estado y cancela la creación del archivo
         estado = ALREADY_EXIST;
@@ -239,10 +280,10 @@ int touch(struct Dir* carpeta , char nombre[MAX_NOMBRE]){
     return estado;
 }
 
-int rmfile(struct Dir* carpeta , char nombre[MAX_NOMBRE]){
+int rmfile(struct Dir* carpeta , char* nombre){
     enum STATUS estado = SUCCESFULL;
     struct File nuevo;
-    memcpy(nuevo.nombre, nombre, sizeof(char) * MAX_NOMBRE);
+    nuevo.nombre = nombre;
 
     if(buscar(nuevo , carpeta->files)== NULL){ // Si no encuentra archivos devuelve este estado
         estado = NOT_FOUND;
