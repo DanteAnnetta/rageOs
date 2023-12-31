@@ -36,13 +36,13 @@ enum STATUS{NOT_EMPTY , ALREADY_EXIST , ALREADY_EMPTY , NOT_FOUND , UNREACHABLE 
 
 int mkdir(struct  Dir* carpeta , char* nombre);
 
-int rmdir(struct Dir* carpeta , char* nombre);
+//int rmdir(struct Dir* carpeta , char* nombre);
 
 int cd (struct Dir* carpeta , char* nombre);
 
 int back(struct Dir* carpeta);
 
-int ls(struct Dir* carpeta);
+//int ls(struct Dir* carpeta);
 
 int chmod(struct Dir* carpeta, int permisos);
 

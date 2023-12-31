@@ -16,7 +16,7 @@ int criterioArchivo(struct File archivo1 , struct File archivo2){
 
 // estas funciones necesitan que se les pase el valor del puntero, no el puntero 
 void insertar(struct File archivo , struct Nodo * Lista){
-    struct Nodo* nuevo;
+    struct Nodo* nuevo = malloc(sizeof(struct Nodo));
     nuevo->dato = archivo;
 
     struct Nodo** pp = & Lista;
@@ -28,7 +28,7 @@ void insertar(struct File archivo , struct Nodo * Lista){
 }
 
 // esta función, en conjunto con la anterior se utilizarán para realizar movimientos dentro del sistema de archivos
-
+/*
 
 bool borrar(struct File archivo , struct Nodo* Lista){
     struct Nodo* ext = extraer(archivo , &Lista);
@@ -58,7 +58,7 @@ struct Nodo* extraer(struct File archivo, struct Nodo* Lista){
         return NULL;
     }
 }
-
+*/
 // Hasta esta función, todas las de manipulación de la lista de archivos necesitan que el parámetro de la lista se pase como valor del puntero y no como puntero
 
 struct Nodo* buscar(struct File archivo , struct Nodo* Lista){
@@ -85,7 +85,7 @@ struct Nodo* buscar(struct File archivo , struct Nodo* Lista){
 
 int mkdir(struct  Dir* carpeta , char* nombre){
     enum STATUS estado = SUCCESFULL;  // a no ser que haya errores, el estado predeterminado es de éxito
-    struct Dir* nuevo;
+    struct Dir* nuevo = malloc(sizeof(struct Dir));;
     nuevo->sup = carpeta;  // la carpeta de la que proviene
     nuevo->nombre = nombre;
     nuevo->permisos = carpeta->permisos;  // a no ser que se modifiquen, las carpetas creadas mantendrán los mismos permisos que las heredadas
@@ -111,7 +111,7 @@ int mkdir(struct  Dir* carpeta , char* nombre){
 }
 
 
-
+/*
 int rmdir(struct Dir* carpeta , char* nombre){
     enum STATUS estado = SUCCESFULL;
 
@@ -146,7 +146,7 @@ int rmdir(struct Dir* carpeta , char* nombre){
 
     return estado;
 }
-
+}*/
 
 
 int cd (struct Dir* carpeta , char* nombre){
@@ -172,6 +172,7 @@ int cd (struct Dir* carpeta , char* nombre){
         }
         
     }
+    return estado;
 }
 
 int back(struct Dir* carpeta){
@@ -185,7 +186,7 @@ int back(struct Dir* carpeta){
 
     return estado;
 }
-
+/*
 // función para consultar el contenido de una carpeta
 int ls(struct Dir* carpeta){
     enum STATUS estado = SUCCESFULL;
@@ -218,7 +219,7 @@ int ls(struct Dir* carpeta){
 
     return estado;
 }
-
+*/
 // en un principio, se podrá cambiar los permisos de las carpetas y de los archivos sin ningún tipo de restricción.
 // estas se agregarán cuando se desarrolle el concepto de usuarios
 
@@ -245,6 +246,7 @@ char* concat(char* s1 , char* s2){
 
 // en esta función no es necesario pasar por referencia el valor del puntero
 int pwd(struct Dir* carpeta){
+    enum STATUS estado = SUCCESFULL;
     char* path;
     char* aux;
     while (carpeta->sup){
@@ -256,17 +258,18 @@ int pwd(struct Dir* carpeta){
 
     printf("%s \n" , path);  // muestra el camino absoluto desde donde se encuentra actualmente
     
+    return estado;
 }
 
 
 //------------------------------------------------------------------FUNCIONES PARA MANIPULACIÓN DE ARCHIVOS-------------------------------------------------------------
 
-
+/*
 
 // función para crear un archivo dentro del directorio actual
 int touch(struct Dir* carpeta , char* nombre){
     enum STATUS estado = SUCCESFULL;
-    struct File nuevo;
+    struct File  = malloc(sizeof(struct File));;
     nuevo.nombre = nombre;
 
     if(buscar(nuevo , carpeta->files)!= NULL){ // Si encuentra un archivo con ese nombre dentro de la carpeta devuelve este estado y cancela la creación del archivo
@@ -282,7 +285,7 @@ int touch(struct Dir* carpeta , char* nombre){
 
 int rmfile(struct Dir* carpeta , char* nombre){
     enum STATUS estado = SUCCESFULL;
-    struct File nuevo;
+    struct File nuevo = malloc(sizeof(struct File));;
     nuevo.nombre = nombre;
 
     if(buscar(nuevo , carpeta->files)== NULL){ // Si no encuentra archivos devuelve este estado
@@ -293,3 +296,5 @@ int rmfile(struct Dir* carpeta , char* nombre){
     }
     return estado;
 }
+
+*/
